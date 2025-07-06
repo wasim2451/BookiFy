@@ -1,19 +1,29 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import {
     app,
     email_pass,
     signin_email_pass,
-    googleSignIn
+    googleSignIn,
+    checkUser
 } from "./Firebase";
 const FirebaseContext = createContext(null);
 
 export const Firebase = (props) => {
-    const [name, setName] = useState("Wasim")
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        //On Mounting
+        const temp=()=>{
+            checkUser(setUser)
+        }
+        //Unmounting
+        return temp();
+    }, [])
+    const isLoggedIn=user ? true :false
     return <FirebaseContext.Provider value={{
-        name,
         email_pass,
         signin_email_pass,
-        googleSignIn
+        googleSignIn,
+        isLoggedIn
     }}>
         {props.children}
     </FirebaseContext.Provider>

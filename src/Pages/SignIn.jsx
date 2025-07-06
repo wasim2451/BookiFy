@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { FcGoogle } from "react-icons/fc";
 import { useFirebase } from "../context/FirebaseContext";
+import { useNavigate } from "react-router-dom";
 const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { signin_email_pass, googleSignIn } = useFirebase();
+    const { signin_email_pass, googleSignIn , isLoggedIn} = useFirebase();
+    const navigate=useNavigate();
+    useEffect(()=>{
+        console.log("Navigating to Home on Logged In !");
+        if(isLoggedIn){
+            navigate('/');
+        }
+    },[isLoggedIn,navigate])
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Add Firebase sign-in logic here later

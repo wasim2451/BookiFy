@@ -4,8 +4,9 @@ import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signInWithPopup, 
-    GoogleAuthProvider
+    signInWithPopup,
+    GoogleAuthProvider,
+    onAuthStateChanged
 } from "firebase/auth";
 
 //Configuration of firebase 
@@ -25,12 +26,23 @@ export const email_pass = (email, pass) => {
     return createUserWithEmailAndPassword(auth, email, pass);
 }
 //Signin with email and passsword 
-export const signin_email_pass=(email,pass)=>{
-    return signInWithEmailAndPassword(auth,email,pass);
+export const signin_email_pass = (email, pass) => {
+    return signInWithEmailAndPassword(auth, email, pass);
 }
 
 //Google Log In
 const provider = new GoogleAuthProvider();
-export const googleSignIn=()=>{
-    return signInWithPopup(auth,provider);
+export const googleSignIn = () => {
+    return signInWithPopup(auth, provider);
+}
+export const checkUser = (setUser) => {
+   onAuthStateChanged(auth, (user) => {
+        if (user) {
+           setUser(user);
+        } else {
+            console.log("No user signed In !");
+            setUser(null);
+            
+        }
+    });
 }
