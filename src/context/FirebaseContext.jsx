@@ -5,7 +5,9 @@ import {
     signin_email_pass,
     googleSignIn,
     checkUser,
-    signout
+    signout,
+    supabase,
+    uploadData
 } from "./Firebase";
 const FirebaseContext = createContext(null);
 
@@ -26,7 +28,9 @@ export const Firebase = (props) => {
         googleSignIn,
         isLoggedIn,
         user,
-        signout
+        signout,
+        supabase,
+        uploadData
     }}>
         {props.children}
     </FirebaseContext.Provider>

@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 const CustomNavbar = () => {
   const { user, isLoggedIn ,signout } = useFirebase();
-
   let name = user?.displayName || user?.email || "";
   let src = user?.photoURL || null;
   const navigate=useNavigate();
@@ -22,17 +21,17 @@ const CustomNavbar = () => {
 
         <Navbar.Collapse id="basic-navbar-nav">
           
-          <Nav className="me-auto flex-column flex-lg-row align-items-start align-items-lg-center gap-2 gap-lg-4">
+          <Nav className="me-auto flex-column flex-lg-row align-items-center align-items-lg-center  gap-lg-4">
             <Nav.Link href="/" className="text-white" >
               Home
             </Nav.Link>
-            <Nav.Link href="/list-book" className="text-white nav-link">
+            <Nav.Link href="/book-listing" className="text-white nav-link">
               List Your Book
             </Nav.Link>
           </Nav>
 
       
-          <Nav className="ms-auto d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 gap-lg-3 mt-3 mt-lg-0">
+          <Nav className="ms-auto d-flex flex-column flex-lg-row align-items-center align-items-lg-center gap-2 gap-lg-3 mt-3 mt-lg-0">
             {!isLoggedIn ? (
               <Nav.Link href="/signin" className="text-white">
                 <Button variant="outline-light">Sign In</Button>
@@ -56,10 +55,15 @@ const CustomNavbar = () => {
                 <Button
                   variant="outline-light"
                   size="sm"
+                  className="mb-3 mb-lg-0"
                   onClick={async() => {
-                    const res=await signout(isLoggedIn);
-                    console.log(res);
-                    navigate('/');
+                    try{
+                         const res=await signout(isLoggedIn);
+                         console.log(res);
+                        navigate('/');
+                    }catch(e){
+
+                    } 
                   }}
                 >
                   Sign Out
