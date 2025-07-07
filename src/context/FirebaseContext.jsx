@@ -7,7 +7,8 @@ import {
     checkUser,
     signout,
     supabase,
-    uploadData
+    uploadData,
+    retreiveData
 } from "./Firebase";
 const FirebaseContext = createContext(null);
 
@@ -30,7 +31,8 @@ export const Firebase = (props) => {
         user,
         signout,
         supabase,
-        uploadData
+        uploadData,
+        retreiveData
     }}>
         {props.children}
     </FirebaseContext.Provider>

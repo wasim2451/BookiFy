@@ -1,6 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { createClient } from '@supabase/supabase-js'
-import { getFirestore , collection , addDoc} from "firebase/firestore";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    getDoc
+} from "firebase/firestore";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -8,7 +14,7 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     onAuthStateChanged,
-    signOut
+    signOut,
 } from "firebase/auth";
 
 //Configuration of firebase 
@@ -41,41 +47,49 @@ export const googleSignIn = () => {
 }
 //To check user loggedin or Not 
 export const checkUser = (setUser) => {
-   onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
         if (user) {
-           setUser(user);
+            setUser(user);
         } else {
             console.log("No user signed In !");
             setUser(null);
-            
+
         }
     });
 }
 //For signout the users 
-export const signout=(isLoggedIn)=>{
-    isLoggedIn=false;
+export const signout = (isLoggedIn) => {
+    isLoggedIn = false;
     return signOut(auth);
 }
 
 // Firestore Setup 
-export const uploadData=async(title,isbn,price,coverURL,user)=>{
-try {
-  const docRef = await addDoc(collection(db, "books"), {
-    "title":title,
-    "isbn":isbn,
-    "price":price,
-    "coverURL":coverURL,
-    "email":user.email,
-    "userURL":user.photoURL,
-    "userId":user.uid
-  });
-  console.log("Document written with ID: ", docRef.id);
-} catch (e) {
-  console.error("Error adding document: ", e);
+export const uploadData = async (title, isbn, price, coverURL, user) => {
+    try {
+        const docRef = await addDoc(collection(db, "books"), {
+            "title": title,
+            "isbn": isbn,
+            "price": price,
+            "coverURL": coverURL,
+            "email": user.email,
+            "userURL": user.photoURL ? user.photoURL : "https://www.shareicon.net/data/512x512/2016/07/19/798351_man_512x512.png",
+            "userId": user.uid,
+            "username": user.displayName ? user.displayName : "Anonymous"
+        });
+        console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding document: ", e);
     }
 }
 
+//Retrieving the Firestore Data 
+export const retreiveData=async()=>{
+    const data=await getDocs(collection(db,'books'));
+    return data; 
+}
+
+
 //configuring Supabase 
-const supabaseURL='https://urwjyfmoddgfydivkpxv.supabase.co';
-const supabaseKey='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyd2p5Zm1vZGRnZnlkaXZrcHh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4ODgwNDcsImV4cCI6MjA2NzQ2NDA0N30.ISyu6rT_8M2AHJeSC7kpIa8OJYOfpbWqxES11nvx_Xk';
-export const supabase=createClient(supabaseURL,supabaseKey);
+const supabaseURL = 'https://urwjyfmoddgfydivkpxv.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyd2p5Zm1vZGRnZnlkaXZrcHh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4ODgwNDcsImV4cCI6MjA2NzQ2NDA0N30.ISyu6rT_8M2AHJeSC7kpIa8OJYOfpbWqxES11nvx_Xk';
+export const supabase = createClient(supabaseURL, supabaseKey);
