@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useFirebase } from "../context/FirebaseContext";
+import { useNavigate } from "react-router-dom";
+useNavigate
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {email_pass}=useFirebase();
+  const {email_pass,isLoggedIn}=useFirebase();
+  const navigate=useNavigate();
+    useEffect(()=>{
+        console.log("Navigating to Home on Logged In !");
+        if(isLoggedIn){
+            navigate('/');
+        }
+    },[isLoggedIn,navigate]);
+
   const handleSubmit = async(e) => {
     e.preventDefault();
-    // You can integrate Firebase auth logic here
     console.log("Email:", email);
     console.log("Password:", password);
     try {
@@ -17,7 +26,6 @@ const Register = () => {
         console.error(error.message);
         alert(error.message);
     }
-    
   };
 
   return (

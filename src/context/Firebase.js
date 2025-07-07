@@ -6,7 +6,8 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
     GoogleAuthProvider,
-    onAuthStateChanged
+    onAuthStateChanged,
+    signOut
 } from "firebase/auth";
 
 //Configuration of firebase 
@@ -35,6 +36,7 @@ const provider = new GoogleAuthProvider();
 export const googleSignIn = () => {
     return signInWithPopup(auth, provider);
 }
+//To check user loggedin or Not 
 export const checkUser = (setUser) => {
    onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -45,4 +47,9 @@ export const checkUser = (setUser) => {
             
         }
     });
+}
+//For signout the users 
+export const signout=(isLoggedIn)=>{
+    isLoggedIn=false;
+    return signOut(auth);
 }
