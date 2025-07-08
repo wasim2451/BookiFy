@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 const CustomNavbar = () => {
   const { user, isLoggedIn ,signout } = useFirebase();
+  console.log(user);
+  
   let name = user?.displayName || user?.email || "";
   let src = user?.photoURL || null;
   const navigate=useNavigate();
@@ -25,9 +27,14 @@ const CustomNavbar = () => {
             <Nav.Link href="/" className="text-white" >
               Home
             </Nav.Link>
-            {isLoggedIn ? <Nav.Link href="/book-listing" className="text-white nav-link">
-              List Your Book
-            </Nav.Link>:<></>} 
+            {isLoggedIn ?<>
+                    <Nav.Link href="/book-listing" className="text-white nav-link">
+                    List Your Book
+                    </Nav.Link>
+                    <Nav.Link href={`/user/sales/${user.uid}`} className="text-white nav-link">
+                    Your Sales
+                    </Nav.Link>
+                    </> :<></>} 
           </Nav>
 
       

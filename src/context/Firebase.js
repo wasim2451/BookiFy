@@ -5,7 +5,8 @@ import {
     collection,
     addDoc,
     getDocs,
-    getDoc
+    getDoc,
+    doc
 } from "firebase/firestore";
 import {
     getAuth,
@@ -74,7 +75,7 @@ export const uploadData = async (title, isbn, price, coverURL, user) => {
             "email": user.email,
             "userURL": user.photoURL ? user.photoURL : "https://www.shareicon.net/data/512x512/2016/07/19/798351_man_512x512.png",
             "userId": user.uid,
-            "username": user.displayName ? user.displayName : "Anonymous"
+            "username": user.displayName ? user.displayName : `Anonymous${Math.floor(Math.random()*1000)+1}`
         });
         console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -87,6 +88,21 @@ export const retreiveData=async()=>{
     const data=await getDocs(collection(db,'books'));
     return data; 
 }
+
+//Retreiving a Single Book Information
+export const retreiveSingleBook=async(bookID)=>{
+    const docRef=doc(db, "books", bookID);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    return docSnap.data();
+    } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
+    alert("No such document exist !");
+    }
+}
+
 
 
 //configuring Supabase 

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { getBookDetails, getGroqChatCompletion } from "./lama";
 import {
     app,
     email_pass,
@@ -8,7 +9,8 @@ import {
     signout,
     supabase,
     uploadData,
-    retreiveData
+    retreiveData,
+    retreiveSingleBook
 } from "./Firebase";
 const FirebaseContext = createContext(null);
 
@@ -32,7 +34,10 @@ export const Firebase = (props) => {
         signout,
         supabase,
         uploadData,
-        retreiveData
+        retreiveData,
+        getBookDetails,
+        getGroqChatCompletion,
+        retreiveSingleBook
     }}>
         {props.children}
     </FirebaseContext.Provider>
