@@ -20,7 +20,7 @@ import {
 
 //Configuration of firebase 
 const firebaseConfig = {
-    apiKey: "AIzaSyD9XKJ321fwZaB4QHwqL3WqpfK57q6KEbU",
+    apiKey:import.meta.env.VITE_FIREBASE_API_KEY ,
     authDomain: "bookify-a3b88.firebaseapp.com",
     projectId: "bookify-a3b88",
     storageBucket: "bookify-a3b88.firebasestorage.app",
@@ -107,5 +107,5 @@ export const retreiveSingleBook=async(bookID)=>{
 
 //configuring Supabase 
 const supabaseURL = 'https://urwjyfmoddgfydivkpxv.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyd2p5Zm1vZGRnZnlkaXZrcHh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4ODgwNDcsImV4cCI6MjA2NzQ2NDA0N30.ISyu6rT_8M2AHJeSC7kpIa8OJYOfpbWqxES11nvx_Xk';
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 export const supabase = createClient(supabaseURL, supabaseKey);

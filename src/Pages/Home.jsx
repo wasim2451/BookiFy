@@ -28,7 +28,7 @@ function Home() {
     <Row className="g-3 container-box">
       {books.map((book) => (
         <Col xs={12} sm={6} md={4} lg={3} key={book.id}>
-          <Card className="h-100 border-0 cards">
+          <Card className=" border-0 cards">
             <Card.Img
               variant="top"
               src={book.coverURL}

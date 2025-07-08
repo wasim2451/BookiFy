@@ -51,7 +51,7 @@ function BookDetails() {
                                     variant="primary"
                                     style={{ opacity: 0.6 }}
                                 />
-                                <span className="text-muted">Loading details...</span>
+                                <span className="text-muted">Fetching Book details using Llama 3.1...</span>
                             </div>
                         )}
                     </div>
