@@ -64,7 +64,7 @@ export const signout = (isLoggedIn) => {
     return signOut(auth);
 }
 
-// Firestore Setup 
+// Firestore Setup and Upload data
 export const uploadData = async (title, isbn, price, coverURL, user) => {
     try {
         const docRef = await addDoc(collection(db, "books"), {

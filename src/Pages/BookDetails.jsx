@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react'
 import Spinner from 'react-bootstrap/Spinner';
 import { useParams } from 'react-router-dom';
 import { useFirebase } from '../context/FirebaseContext';
+import { Razorpay } from 'razorpay';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function BookDetails() {
     const { bookID } = useParams();
     const [bookInfo, setBookInfo] = useState({});
     const [bookDetails, setBookDetails] = useState(null);
-    const { getBookDetails, getGroqChatCompletion, retreiveSingleBook } = useFirebase();
-
+    const { user, getBookDetails, getGroqChatCompletion, retreiveSingleBook, paymentFunction } = useFirebase();
+    const [qty, setQty] = useState(1);
+    const navigate=useNavigate();
     useEffect(() => {
         const fetchbookAndDetails = async () => {
             try {
@@ -33,13 +37,63 @@ function BookDetails() {
 
         fetchbookAndDetails();
     }, [bookID]);
+
+    const handlePayment = async () => {
+        console.log(user.uid, " iS Buyer !");
+        console.log(bookInfo.userId, " is Seller");
+        if(user.uid===bookInfo.userId){
+            alert("You can't buy your own books !Buy some others ");
+            return navigate('/');
+
+        }
+
+        const amt = parseInt(bookInfo.price) * qty * 100; //paisa-format
+        const obj = {
+            amount: amt,
+            currency: "INR",
+            receipt: `${Date.now()}`,
+            bookId: bookID,
+            sellerId: bookInfo.userId,
+            buyerId: user.uid
+        };
+        const orderID = await paymentFunction(obj);
+        console.log(orderID);
+
+        var options = {
+            key: import.meta.env.VITE_RAZORPAY_TEST_KEY_ID,
+            amount: amt,
+            currency: "INR",
+            name: bookInfo.title,
+            order_id: orderID,
+            handler: async function (response) {
+                console.log(response);
+                const res=await axios.post("http://localhost:3000/api/verify", {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+                });
+                if(res.data.status==="success"){
+                    // Data Store in FireStore ! 
+
+                    //Email send to sender !
+
+                }else{
+                    alert("Payment Failed !");
+                }
+            },
+        };
+        var rzp = new window.Razorpay(options);
+        rzp.open();
+
+    }
+
     return (
         <div className="container py-4">
             <div className="row g-4 align-items-start">
                 {/* LEFT: Book Info */}
                 <div className="col-12 col-lg-6">
                     <div className=" bg-light h-100 book-info">
-                        <h3 className="fw-bold mb-3 text-success text-center">Book Information</h3>
+                        <h3 className="fw-bold mb-3 text-success text-center">Book Information AI </h3>
                         {bookDetails ? (
                             <p className="text-muted" style={{ whiteSpace: "pre-line" }}>
                                 {bookDetails}
@@ -87,7 +141,7 @@ function BookDetails() {
                         {/* Seller Info */}
                         <div className="d-flex align-items-center mb-3">
                             <img
-                                src={bookInfo.userURL ? bookInfo.userURL:"https://i.fbcd.co/products/original/s211206-kids-avat001-mainpreview-68e535dc97667c8fffa14c6da9e6f5787447ab7513f0fee9a9a39b9856312c9c.jpg"}
+                                src={bookInfo.userURL ? bookInfo.userURL : "https://i.fbcd.co/products/original/s211206-kids-avat001-mainpreview-68e535dc97667c8fffa14c6da9e6f5787447ab7513f0fee9a9a39b9856312c9c.jpg"}
                                 alt={bookInfo.username}
                                 className="rounded-circle me-2"
                                 style={{ width: "30px", height: "30px", objectFit: "cover" }}
@@ -95,19 +149,22 @@ function BookDetails() {
                             <span className="text-muted small">{bookInfo.username}</span>
                         </div>
                         <p className="mb-2">
-                            <span className="fw-bold">Seller Email:</span><span className='text-secondary'> &#160;{bookInfo.email}</span> 
+                            <span className="fw-bold">Seller Email:</span><span className='text-secondary'> &#160;{bookInfo.email}</span>
                         </p>
 
                         {/* Quantity & Buy Button */}
                         <div className="d-flex flex-column flex-sm-row gap-3">
+                            <label htmlFor="">Qty :</label>
                             <input
                                 type="number"
                                 min="1"
-                                defaultValue="1"
                                 className="form-control"
                                 style={{ maxWidth: "120px" }}
+                                value={qty}
+                                onChange={(e) => setQty(e.target.value)}
                             />
-                            <button className="btn btn-success flex-grow-1">
+                            <button className="btn btn-success flex-grow-1"
+                                onClick={handlePayment} >
                                 Buy Now
                             </button>
                         </div>

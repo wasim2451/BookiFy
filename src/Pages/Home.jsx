@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   const [books, setBooks] = useState([]);
-  const { retreiveData,uploadData } = useFirebase();
+  const { retreiveData,uploadData , isLoggedIn} = useFirebase();
   
 
   useEffect(() => {
@@ -49,7 +49,7 @@ function Home() {
                <span>Rs.{book.price}</span>
               </Card.Text>
               <div className="">
-                <Link to={`/book/${book.id}`}>
+                <Link to={isLoggedIn?`/book/${book.id}`:`/signin`}>
                   <Button 
                     variant="primary" 
                     size="sm" 

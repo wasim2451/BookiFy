@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Image,} from "react-bootstrap";
 import { FcGoogle } from "react-icons/fc";
 import { useFirebase } from "../context/FirebaseContext";
 import { useNavigate } from "react-router-dom";
@@ -42,48 +48,63 @@ const SignIn = () => {
     };
 
     return (
-        <Container className="mt-5">
-            <Row className="justify-content-md-center">
-                <Col md={6}>
-                    <h2 className="mb-4 text-center">Sign In</h2>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="formBasicEmail" className="mb-3">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control
-                                type="email"
-                                placeholder="Enter email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </Form.Group>
+       <Container className="py-5 px-4" style={{ minHeight: "100vh", background: "#f8f9fa" }}>
+      <Row className="justify-content-center">
+        <Col xs={12} sm={10} md={6} lg={5}>
+          <Card className="shadow">
+            <Card.Body className="p-4">
+              <h3 className="text-center mb-4">Sign In</h3>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="formBasicEmail" className="mb-3">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Group>
 
-                        <Form.Group controlId="formBasicPassword" className="mb-3">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </Form.Group>
+                <Form.Group controlId="formBasicPassword" className="mb-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Group>
 
-                        <Button variant="primary" type="submit" className="w-100 mb-3">
-                            Sign In
-                        </Button>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="w-100 mb-3"
+                  size="md"
+                >
+                  <b>Sign In</b>
+                </Button>
 
-                        <Button
-                            variant="danger"
-                            type="button"
-                            className="w-100 fw-bold d-flex align-items-center justify-content-center"
-                            onClick={handleGoogleSignIn}
-                        >
-                            <FcGoogle size={24} className="me-2" />
-                            Sign In using Google
-                        </Button>
-                    </Form>
-                </Col>
-            </Row>
-        </Container>
+                <Button
+                  variant="danger"
+                  type="button"
+                  className="w-100 d-flex align-items-center justify-content-center"
+                  onClick={handleGoogleSignIn}
+                  size="md"
+                >
+                  <Image
+                    src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-white-icon.png"
+                    alt="Google"
+                    width={20}
+                    className="me-2"
+                  />
+                  <b>Sign in with Google</b>
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
     );
 };
 

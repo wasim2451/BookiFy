@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getBookDetails, getGroqChatCompletion } from "./lama";
+import { paymentFunction } from "./payment";
 import {
     app,
     email_pass,
@@ -37,7 +38,8 @@ export const Firebase = (props) => {
         retreiveData,
         getBookDetails,
         getGroqChatCompletion,
-        retreiveSingleBook
+        retreiveSingleBook,
+        paymentFunction
     }}>
         {props.children}
     </FirebaseContext.Provider>
