@@ -32,7 +32,10 @@ const CustomNavbar = () => {
                     List Your Book
                     </Nav.Link>
                     <Nav.Link href={`/user/sales/${user.uid}`} className="text-white nav-link">
-                    Your Sales
+                    Sales
+                    </Nav.Link>
+                    <Nav.Link href={`/user/orders/${user.uid}`} className="text-white nav-link">
+                    Orders
                     </Nav.Link>
                     </> :<></>} 
           </Nav>

@@ -103,6 +103,24 @@ export const retreiveSingleBook=async(bookID)=>{
     }
 }
 
+//Sending order details to Firestore 
+export const uploadOrderData = async ({amount,bookname,sellerId,buyerId,qty,buyerName,buyerEmail,orderId}) => {
+    try {
+        const docRef = await addDoc(collection(db, "orders"), {
+            "name":bookname,
+            "quantity":qty,
+            "amount": amount/100,
+            "sellerId": sellerId,
+            "buyerId":buyerId,
+            "buyerName":buyerName,
+            "buyerEmail":buyerEmail,
+            "order_id":orderId
+        });
+        console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
 
 
 //configuring Supabase 

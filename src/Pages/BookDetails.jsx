@@ -10,9 +10,9 @@ function BookDetails() {
     const { bookID } = useParams();
     const [bookInfo, setBookInfo] = useState({});
     const [bookDetails, setBookDetails] = useState(null);
-    const { user, getBookDetails, getGroqChatCompletion, retreiveSingleBook, paymentFunction } = useFirebase();
+    const { user, getBookDetails, getGroqChatCompletion, retreiveSingleBook, paymentFunction, uploadOrderData } = useFirebase();
     const [qty, setQty] = useState(1);
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchbookAndDetails = async () => {
             try {
@@ -41,12 +41,12 @@ function BookDetails() {
     const handlePayment = async () => {
         console.log(user.uid, " iS Buyer !");
         console.log(bookInfo.userId, " is Seller");
-        if(user.uid===bookInfo.userId){
+        if (user.uid === bookInfo.userId) {
             alert("You can't buy your own books !Buy some others ");
             return navigate('/');
 
         }
-
+        let isPaymentCompleted = false;
         const amt = parseInt(bookInfo.price) * qty * 100; //paisa-format
         const obj = {
             amount: amt,
@@ -59,32 +59,48 @@ function BookDetails() {
         const orderID = await paymentFunction(obj);
         console.log(orderID);
 
-        var options = {
-            key: import.meta.env.VITE_RAZORPAY_TEST_KEY_ID,
-            amount: amt,
-            currency: "INR",
-            name: bookInfo.title,
-            order_id: orderID,
-            handler: async function (response) {
-                console.log(response);
-                const res=await axios.post("http://localhost:3000/api/verify", {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature
-                });
-                if(res.data.status==="success"){
-                    // Data Store in FireStore ! 
+        if (orderID) {
 
-                    //Email send to sender !
+            // Payload object for Firestore
+            const orderData = {
+                amount: amt,
+                bookname: bookInfo.title,
+                sellerId: user.uid,
+                buyerId: bookInfo.userId,
+                buyerName: bookInfo.username,
+                buyerEmail: bookInfo.email,
+                orderId: orderID,
+                qty: qty
+            }
+            var options = {
+                key: import.meta.env.VITE_RAZORPAY_TEST_KEY_ID,
+                amount: amt,
+                currency: "INR",
+                name: bookInfo.title,
+                order_id: orderID,
+                handler: async function (response) {
+                    console.log(response);
+                    const res = await axios.post("http://localhost:3000/api/verify", {
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    });
+                    if (res.data.status === "success") {
+                        isPaymentCompleted = true;
+                        alert("Payment Successful !");
+                        // Data Store in FireStore ! 
+                        console.log(isPaymentCompleted);
+                        await uploadOrderData(orderData);
+                        //Email send to sender !
 
-                }else{
-                    alert("Payment Failed !");
-                }
-            },
-        };
-        var rzp = new window.Razorpay(options);
-        rzp.open();
-
+                    } else {
+                        alert("Payment Failed !");
+                    }
+                },
+            };
+            var rzp = new window.Razorpay(options);
+            rzp.open();
+        }
     }
 
     return (

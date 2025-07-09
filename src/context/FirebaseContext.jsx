@@ -11,7 +11,8 @@ import {
     supabase,
     uploadData,
     retreiveData,
-    retreiveSingleBook
+    retreiveSingleBook,
+    uploadOrderData
 } from "./Firebase";
 const FirebaseContext = createContext(null);
 
@@ -39,7 +40,8 @@ export const Firebase = (props) => {
         getBookDetails,
         getGroqChatCompletion,
         retreiveSingleBook,
-        paymentFunction
+        paymentFunction,
+        uploadOrderData
     }}>
         {props.children}
     </FirebaseContext.Provider>
