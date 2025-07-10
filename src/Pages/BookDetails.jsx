@@ -10,7 +10,7 @@ function BookDetails() {
     const { bookID } = useParams();
     const [bookInfo, setBookInfo] = useState({});
     const [bookDetails, setBookDetails] = useState(null);
-    const { user, getBookDetails, getGroqChatCompletion, retreiveSingleBook, paymentFunction, uploadOrderData } = useFirebase();
+    const { user, getBookDetails, getGroqChatCompletion, retreiveSingleBook, paymentFunction, uploadOrderData , emailFunction } = useFirebase();
     const [qty, setQty] = useState(1);
     const navigate = useNavigate();
     useEffect(() => {
@@ -89,9 +89,20 @@ function BookDetails() {
                         isPaymentCompleted = true;
                         alert("Payment Successful !");
                         // Data Store in FireStore ! 
-                        console.log(isPaymentCompleted);
-                        await uploadOrderData(orderData);
+                        console.log(isPaymentCompleted,"Payment Success");
+                        const isUpload=await uploadOrderData(orderData); // true or false
                         //Email send to sender !
+                        console.log(isUpload,"status firestore !");
+                        
+                        if(isUpload){
+                            const isEmail=await emailFunction(orderData); // true or false
+                            if(isEmail){
+                                alert(`Order Email sent to ${orderData.buyerEmail}`);
+                            }else{
+                                alert(`Order Email failed to sent !`);
+                                return ;
+                            }
+                        }
 
                     } else {
                         alert("Payment Failed !");
