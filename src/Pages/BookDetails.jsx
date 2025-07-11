@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Button } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import { useParams } from 'react-router-dom';
 import { useFirebase } from '../context/FirebaseContext';
@@ -10,8 +11,20 @@ function BookDetails() {
     const { bookID } = useParams();
     const [bookInfo, setBookInfo] = useState({});
     const [bookDetails, setBookDetails] = useState(null);
-    const { user, getBookDetails, getGroqChatCompletion, retreiveSingleBook, paymentFunction, uploadOrderData , emailFunction } = useFirebase();
+    const [reviews, setReviews] = useState([]);
+    const { user,
+        getBookDetails,
+        getGroqChatCompletion,
+        retreiveSingleBook,
+        paymentFunction,
+        uploadOrderData,
+        emailFunction,
+        uploadReviews,
+        retreiveReviews
+    } = useFirebase();
     const [qty, setQty] = useState(1);
+    const [review, setReview] = useState("");
+    const [finalreview, setFinalReview] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
         const fetchbookAndDetails = async () => {
@@ -34,9 +47,15 @@ function BookDetails() {
                 console.error("Error fetching book or details:", err);
             }
         };
+        const reviewsGet = async () => {
+            const data = await retreiveReviews(bookID);
+            setReviews(data);
+            console.log(reviews);
 
+        }
         fetchbookAndDetails();
-    }, [bookID]);
+        reviewsGet();
+    }, [bookID, finalreview]);
 
     const handlePayment = async () => {
         console.log(user.uid, " iS Buyer !");
@@ -89,18 +108,18 @@ function BookDetails() {
                         isPaymentCompleted = true;
                         alert("Payment Successful !");
                         // Data Store in FireStore ! 
-                        console.log(isPaymentCompleted,"Payment Success");
-                        const isUpload=await uploadOrderData(orderData); // true or false
+                        console.log(isPaymentCompleted, "Payment Success");
+                        const isUpload = await uploadOrderData(orderData); // true or false
                         //Email send to sender !
-                        console.log(isUpload,"status firestore !");
-                        
-                        if(isUpload){
-                            const isEmail=await emailFunction(orderData); // true or false
-                            if(isEmail){
+                        console.log(isUpload, "status firestore !");
+
+                        if (isUpload) {
+                            const isEmail = await emailFunction(orderData); // true or false
+                            if (isEmail) {
                                 alert(`Order Email sent to ${orderData.buyerEmail}`);
-                            }else{
+                            } else {
                                 alert(`Order Email failed to sent !`);
-                                return ;
+                                return;
                             }
                         }
 
@@ -114,9 +133,29 @@ function BookDetails() {
         }
     }
 
+    const handleReviewSubmit = async () => {
+        setFinalReview(review);
+        if (user?.displayName || user?.email) {
+            const message = {
+                username: user.displayName || user.email,
+                review: review,
+                bookID:bookID
+            };
+            const status = await uploadReviews(message);
+            if (status) {
+                console.log("Review Submitted Successfully ");
+                setReview("");
+            } else {
+                console.log("Review Submission Error ");
+            }
+        } else {
+            console.log("User does not exist !");
+        }
+    }
     return (
         <div className="container py-4">
-            <div className="row g-4 align-items-start">
+        <div>
+             <div className="row g-4 align-items-start">
                 {/* LEFT: Book Info */}
                 <div className="col-12 col-lg-6">
                     <div className=" bg-light h-100 book-info">
@@ -197,8 +236,61 @@ function BookDetails() {
                         </div>
                     </div>
                 </div>
-
             </div>
+        </div>
+           
+            <div className="container my-4">
+                <div className="row justify-content-center">
+                    <div className="col-md-8">
+                        <div
+                            className="p-4 rounded shadow-sm"
+                            style={{
+                                background: "#f9f9f9",
+                                border: "1px solid #e0e0e0",
+                            }}
+                        >
+                            <h4 className="text-primary fw-bold mb-3">Write a Review</h4>
+
+                            <div className="d-flex">
+                                <input
+                                    type="text"
+                                    placeholder="Enter your review..."
+                                    className="form-control me-2"
+                                    value={review}
+                                    onChange={(e) => setReview(e.target.value)}
+                                />
+                                <Button
+                                    variant="primary"
+                                    onClick={handleReviewSubmit}
+                                >
+                                    Submit
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {reviews.length!=0?<div className="review-section px-4">
+                <h3 className="fw-bold text-primary mb-3">Reviews</h3>
+                {reviews.map((item, index) => (
+                    <div
+                        key={index}
+                        className="mb-3 p-3 rounded"
+                        style={{
+                            background: "#f8f9fa",
+                            border: "1px solid #e0e0e0",
+                        }}
+                    >
+                        <h5 className="mb-1 text-success" style={{ fontWeight: "600" }}>
+                            {item.username}
+                        </h5>
+                        <p style={{ margin: 0, color: "#555" }}>{item.review}</p>
+                    </div>
+                ))}
+            </div>:<div className="review-section px-4">
+                <h3 className="fw-bold text-primary mb-3">Reviews</h3>
+                <p>No reviews yet . Be the first one to write .</p>
+            </div>}
         </div>
     );
 

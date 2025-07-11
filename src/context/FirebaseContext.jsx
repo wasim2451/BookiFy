@@ -13,6 +13,8 @@ import {
     retreiveData,
     retreiveSingleBook,
     uploadOrderData,
+    uploadReviews,
+    retreiveReviews
 } from "./Firebase";
 const FirebaseContext = createContext(null);
 
@@ -42,7 +44,9 @@ export const Firebase = (props) => {
         retreiveSingleBook,
         paymentFunction,
         uploadOrderData,
-        emailFunction
+        emailFunction,
+        uploadReviews,
+        retreiveReviews
     }}>
         {props.children}
     </FirebaseContext.Provider>

@@ -6,7 +6,9 @@ import {
     addDoc,
     getDocs,
     getDoc,
-    doc
+    doc,
+    query,
+    where
 } from "firebase/firestore";
 import {
     getAuth,
@@ -20,7 +22,7 @@ import {
 
 //Configuration of firebase 
 const firebaseConfig = {
-    apiKey:import.meta.env.VITE_FIREBASE_API_KEY ,
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: "bookify-a3b88.firebaseapp.com",
     projectId: "bookify-a3b88",
     storageBucket: "bookify-a3b88.firebasestorage.app",
@@ -75,7 +77,7 @@ export const uploadData = async (title, isbn, price, coverURL, user) => {
             "email": user.email,
             "userURL": user.photoURL ? user.photoURL : "https://www.shareicon.net/data/512x512/2016/07/19/798351_man_512x512.png",
             "userId": user.uid,
-            "username": user.displayName ? user.displayName : `Anonymous${Math.floor(Math.random()*1000)+1}`
+            "username": user.displayName ? user.displayName : `Anonymous${Math.floor(Math.random() * 1000) + 1}`
         });
         console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -84,37 +86,37 @@ export const uploadData = async (title, isbn, price, coverURL, user) => {
 }
 
 //Retrieving the Firestore Data 
-export const retreiveData=async()=>{
-    const data=await getDocs(collection(db,'books'));
-    return data; 
+export const retreiveData = async () => {
+    const data = await getDocs(collection(db, 'books'));
+    return data;
 }
 
 //Retreiving a Single Book Information
-export const retreiveSingleBook=async(bookID)=>{
-    const docRef=doc(db, "books", bookID);
+export const retreiveSingleBook = async (bookID) => {
+    const docRef = doc(db, "books", bookID);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-    return docSnap.data();
+        console.log("Document data:", docSnap.data());
+        return docSnap.data();
     } else {
-    // docSnap.data() will be undefined in this case
-    console.log("No such document!");
-    alert("No such document exist !");
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+        alert("No such document exist !");
     }
 }
 
 //Sending order details to Firestore 
-export const uploadOrderData = async ({amount,bookname,sellerId,buyerId,qty,buyerName,buyerEmail,orderId}) => {
+export const uploadOrderData = async ({ amount, bookname, sellerId, buyerId, qty, buyerName, buyerEmail, orderId }) => {
     try {
         const docRef = await addDoc(collection(db, "orders"), {
-            "name":bookname,
-            "quantity":qty,
-            "amount": amount/100,
+            "name": bookname,
+            "quantity": qty,
+            "amount": amount / 100,
             "sellerId": sellerId,
-            "buyerId":buyerId,
-            "buyerName":buyerName,
-            "buyerEmail":buyerEmail,
-            "order_id":orderId
+            "buyerId": buyerId,
+            "buyerName": buyerName,
+            "buyerEmail": buyerEmail,
+            "order_id": orderId
         });
         console.log("Document written with ID: ", docRef.id);
         return true;
@@ -122,6 +124,38 @@ export const uploadOrderData = async ({amount,bookname,sellerId,buyerId,qty,buye
         console.error("Error adding document: ", e);
         return false;
     }
+}
+
+//Upload Reviews
+export const uploadReviews = async ({ username, review, bookID }) => {
+    try {
+        const docRef = await addDoc(collection(db, "reviews"), {
+            "username": username,
+            "review": review,
+            "book_id": bookID
+        });
+        console.log("Reviews written with ID: ", docRef.id);
+        return true;
+    } catch (error) {
+        console.log("Error adding a review !");
+        return false;
+    }
+}
+
+//retrieve Reviews
+export const retreiveReviews = async (bookid) => {
+    const q = query(
+        collection(db, "reviews"),
+        where("book_id", "==", bookid)
+    );
+    const querySnapshot = await getDocs(q); // get documents with bookId
+    const objArray = [];
+    querySnapshot.forEach((doc) => {
+        objArray.push(doc.data());
+    });
+
+    console.log(objArray);
+    return objArray;
 }
 
 
