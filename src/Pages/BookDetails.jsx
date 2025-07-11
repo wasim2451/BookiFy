@@ -84,10 +84,10 @@ function BookDetails() {
             const orderData = {
                 amount: amt,
                 bookname: bookInfo.title,
-                sellerId: user.uid,
-                buyerId: bookInfo.userId,
-                buyerName: bookInfo.username,
-                buyerEmail: bookInfo.email,
+                sellerId: bookInfo.userId ,
+                buyerId:  user.uid,
+                buyerName: user.displayName,
+                buyerEmail: user.email,
                 orderId: orderID,
                 qty: qty
             }
