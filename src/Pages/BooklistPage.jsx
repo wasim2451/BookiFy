@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { useFirebase } from "../context/FirebaseContext";
 
@@ -9,12 +10,19 @@ const BookListing = () => {
     const [cover, setCover] = useState(null);
     const { supabase, user, uploadData } = useFirebase();
     const handleSubmit = async ({ title, isbn, price, coverURL }) => {
-        console.log("Books Submitted !");
-        console.log("Adding to FireStore !");
-        //FireStore Data Upload
-        await uploadData(title, isbn, price, coverURL, user);
-        alert('Book Submitted✅ !');
-    };
+    console.log("Books Submitted !");
+    console.log("Adding to FireStore !");
+    // FireStore Data Upload
+    await uploadData(title, isbn, price, coverURL, user);
+    
+    await Swal.fire({
+        icon: "success",
+        title: "Book Submitted ✅",
+        text: "Your book listing has been successfully added!",
+        confirmButtonText: "OK"
+    });
+};
+
 
     const onSubmit = async (e) => {
         e.preventDefault();

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Swal from "sweetalert2";
 import { Button } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import { useParams } from 'react-router-dom';
@@ -61,10 +62,15 @@ function BookDetails() {
         console.log(user.uid, " iS Buyer !");
         console.log(bookInfo.userId, " is Seller");
         if (user.uid === bookInfo.userId) {
-            alert("You can't buy your own books !Buy some others ");
+            await Swal.fire({
+                icon: "warning",
+                title: "Oops!",
+                text: "You can't buy your own books. Please explore other books instead.",
+                confirmButtonText: "Go to Home"
+            });
             return navigate('/');
-
         }
+
         let isPaymentCompleted = false;
         const amt = parseInt(bookInfo.price) * qty * 100; //paisa-format
         const obj = {
@@ -84,8 +90,8 @@ function BookDetails() {
             const orderData = {
                 amount: amt,
                 bookname: bookInfo.title,
-                sellerId: bookInfo.userId ,
-                buyerId:  user.uid,
+                sellerId: bookInfo.userId,
+                buyerId: user.uid,
                 buyerName: user.displayName,
                 buyerEmail: user.email,
                 orderId: orderID,
@@ -106,26 +112,48 @@ function BookDetails() {
                     });
                     if (res.data.status === "success") {
                         isPaymentCompleted = true;
-                        alert("Payment Successful !");
-                        // Data Store in FireStore ! 
+
+                        await Swal.fire({
+                            title: "Payment Successful!",
+                            text: "Your payment has been processed successfully.",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        });
+
                         console.log(isPaymentCompleted, "Payment Success");
-                        const isUpload = await uploadOrderData(orderData); // true or false
-                        //Email send to sender !
+
+                        const isUpload = await uploadOrderData(orderData);
+
                         console.log(isUpload, "status firestore !");
 
                         if (isUpload) {
-                            const isEmail = await emailFunction(orderData); // true or false
+                            const isEmail = await emailFunction(orderData);
                             if (isEmail) {
-                                alert(`Order Email sent to ${orderData.buyerEmail}`);
+                                await Swal.fire({
+                                    title: "Order Confirmation Email Sent!",
+                                    text: `An order email has been sent to ${orderData.buyerEmail}.`,
+                                    icon: "success",
+                                    confirmButtonText: "OK"
+                                });
                             } else {
-                                alert(`Order Email failed to sent !`);
+                                await Swal.fire({
+                                    title: "Email Sending Failed",
+                                    text: "Order email could not be sent. Please try again later.",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                });
                                 return;
                             }
                         }
-
                     } else {
-                        alert("Payment Failed !");
+                        await Swal.fire({
+                            title: "Payment Failed!",
+                            text: "Something went wrong with the payment.",
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
                     }
+
                 },
             };
             var rzp = new window.Razorpay(options);
@@ -139,7 +167,7 @@ function BookDetails() {
             const message = {
                 username: user.displayName || user.email,
                 review: review,
-                bookID:bookID
+                bookID: bookID
             };
             const status = await uploadReviews(message);
             if (status) {
@@ -154,91 +182,91 @@ function BookDetails() {
     }
     return (
         <div className="container py-4">
-        <div>
-             <div className="row g-4 align-items-start px-4">
-                {/* LEFT: Book Info */}
-                <div className="col-12 col-lg-6">
-                    <div className=" bg-light h-100 book-info">
-                        <h3 className="fw-bold mb-3 text-success text-center">Book Information AI ✨ </h3>
-                        {bookDetails ? (
-                            <p className="text-muted" style={{ whiteSpace: "pre-line" }}>
-                                {bookDetails}
-                            </p>
-                        ) : (
-                            <div className="d-flex align-items-center gap-2">
-                                <Spinner
-                                    animation="border"
-                                    variant="primary"
-                                    style={{ opacity: 0.6 }}
-                                />
-                                <span className="text-muted">Fetching Book details using Llama 3.1...</span>
-                            </div>
-                        )}
+            <div>
+                <div className="row g-4 align-items-start px-4">
+                    {/* LEFT: Book Info */}
+                    <div className="col-12 col-lg-6">
+                        <div className=" bg-light h-100 book-info">
+                            <h3 className="fw-bold mb-3 text-success text-center">Book Information AI ✨ </h3>
+                            {bookDetails ? (
+                                <p className="text-muted" style={{ whiteSpace: "pre-line" }}>
+                                    {bookDetails}
+                                </p>
+                            ) : (
+                                <div className="d-flex align-items-center gap-2">
+                                    <Spinner
+                                        animation="border"
+                                        variant="primary"
+                                        style={{ opacity: 0.6 }}
+                                    />
+                                    <span className="text-muted">Fetching Book details using Llama 3.1...</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
 
-                {/* RIGHT: Book About */}
-                <div className="col-12 col-lg-6">
-                    <div className="p-4 bg-white h-100 book-about">
-                        <h3 className="fw-bold mb-3 text-dark text-center">About This Listing</h3>
+                    {/* RIGHT: Book About */}
+                    <div className="col-12 col-lg-6">
+                        <div className="p-4 bg-white h-100 book-about">
+                            <h3 className="fw-bold mb-3 text-dark text-center">About This Listing</h3>
 
-                        {/* Book Cover Image */}
-                        <div className="mb-3 text-center">
-                            <img
-                                src={bookInfo.coverURL}
-                                alt={bookInfo.title}
-                                style={{
-                                    width: "200px",
-                                    height: "200px",
-                                    objectFit: "contain",
-                                }}
-                            />
-                        </div>
+                            {/* Book Cover Image */}
+                            <div className="mb-3 text-center">
+                                <img
+                                    src={bookInfo.coverURL}
+                                    alt={bookInfo.title}
+                                    style={{
+                                        width: "200px",
+                                        height: "200px",
+                                        objectFit: "contain",
+                                    }}
+                                />
+                            </div>
 
-                        {/* Book Details */}
-                        <h4 className="fw-bold text-dark">{bookInfo.title}</h4>
-                        <p className="mb-2">
-                            <span className="fw-bold">ISBN:</span> {bookInfo.isbn}
-                        </p>
-                        <p className="mb-2">
-                            <span className="fw-bold">Price:</span> ₹{bookInfo.price}
-                        </p>
+                            {/* Book Details */}
+                            <h4 className="fw-bold text-dark">{bookInfo.title}</h4>
+                            <p className="mb-2">
+                                <span className="fw-bold">ISBN:</span> {bookInfo.isbn}
+                            </p>
+                            <p className="mb-2">
+                                <span className="fw-bold">Price:</span> ₹{bookInfo.price}
+                            </p>
 
-                        {/* Seller Info */}
-                        <div className="d-flex align-items-center mb-3">
-                            <img
-                                src={bookInfo.userURL ? bookInfo.userURL : "https://i.fbcd.co/products/original/s211206-kids-avat001-mainpreview-68e535dc97667c8fffa14c6da9e6f5787447ab7513f0fee9a9a39b9856312c9c.jpg"}
-                                alt={bookInfo.username}
-                                className="rounded-circle me-2"
-                                style={{ width: "30px", height: "30px", objectFit: "cover" }}
-                            />
-                            <span className="text-muted small">{bookInfo.username}</span>
-                        </div>
-                        <p className="mb-2">
-                            <span className="fw-bold">Seller Email:</span><span className='text-secondary'> &#160;{bookInfo.email}</span>
-                        </p>
+                            {/* Seller Info */}
+                            <div className="d-flex align-items-center mb-3">
+                                <img
+                                    src={bookInfo.userURL ? bookInfo.userURL : "https://i.fbcd.co/products/original/s211206-kids-avat001-mainpreview-68e535dc97667c8fffa14c6da9e6f5787447ab7513f0fee9a9a39b9856312c9c.jpg"}
+                                    alt={bookInfo.username}
+                                    className="rounded-circle me-2"
+                                    style={{ width: "30px", height: "30px", objectFit: "cover" }}
+                                />
+                                <span className="text-muted small">{bookInfo.username}</span>
+                            </div>
+                            <p className="mb-2">
+                                <span className="fw-bold">Seller Email:</span><span className='text-secondary'> &#160;{bookInfo.email}</span>
+                            </p>
 
-                        {/* Quantity & Buy Button */}
-                        <div className="d-flex flex-column flex-sm-row gap-3">
-                            <label htmlFor="" className='fw-bold'>Qty :</label>
-                            <input
-                                type="number"
-                                min="1"
-                                className="form-control"
-                                style={{ maxWidth: "120px" }}
-                                value={qty}
-                                onChange={(e) => setQty(e.target.value)}
-                            />
-                            <button className="btn btn-success flex-grow-1"
-                                onClick={handlePayment} >
-                                Buy Now
-                            </button>
+                            {/* Quantity & Buy Button */}
+                            <div className="d-flex flex-column flex-sm-row gap-3">
+                                <label htmlFor="" className='fw-bold'>Qty :</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    className="form-control"
+                                    style={{ maxWidth: "120px" }}
+                                    value={qty}
+                                    onChange={(e) => setQty(e.target.value)}
+                                />
+                                <button className="btn btn-success flex-grow-1"
+                                    onClick={handlePayment} >
+                                    Buy Now
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-           
+
             <div className="container my-4 px-4">
                 <div className="row justify-content-start">
                     <div className="col-md-8">
@@ -270,7 +298,7 @@ function BookDetails() {
                     </div>
                 </div>
             </div>
-            {reviews.length!=0?<div className="review-section px-4">
+            {reviews.length != 0 ? <div className="review-section px-4">
                 <h3 className="fw-bold text-dark mb-3">Reviews</h3>
                 {reviews.map((item, index) => (
                     <div
@@ -287,7 +315,7 @@ function BookDetails() {
                         <p style={{ margin: 0, color: "#555" }}>{item.review}</p>
                     </div>
                 ))}
-            </div>:<div className="review-section px-4">
+            </div> : <div className="review-section px-4">
                 <h3 className="fw-bold text-dark mb-3">Reviews</h3>
                 <p>No reviews yet . Be the first one to write .</p>
             </div>}

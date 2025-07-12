@@ -26,13 +26,15 @@ function Intro() {
               variant="warning" 
               size="md"
               href="#books"
+              className='fw-bold'
             >
               View Books
             </Button>
             {isLoggedIn && <Button 
-              variant="outline-danger" 
+              variant="danger" 
               size="md"
               onClick={handleListYourBooks}
+              className='fw-bold'
             >
               List Your Books
             </Button>}
