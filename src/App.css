@@ -27,3 +27,20 @@
     margin-top: 15px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
 }
+.cursor-pointer{
+    cursor: pointer;
+    color: aliceblue;
+}
+.cursor-pointer{
+   text-decoration: none;
+}
+.cursor-pointer:hover{
+    color: yellow;
+}
+.hr{
+    width: 90%;
+}
+.hr-div{
+    display: grid;
+    place-items: center;
+}

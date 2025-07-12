@@ -9,6 +9,8 @@ import BookListing from './Pages/BooklistPage';
 import BookDetails from './Pages/BookDetails';
 import Orders from './Pages/Orders';
 import Sales from './Pages/Sales';
+import Footer from './Pages/Footer';
+import About from './Pages/About';
 function App() {
         
   return (
@@ -22,7 +24,9 @@ function App() {
         <Route path='/book/:bookID' element={<BookDetails/>} />
         <Route path='/user/orders/:userID' element={<Orders/>} />
         <Route path='/user/sales/:userID' element={<Sales/>} />
+        <Route path='/about' element={<About/>} />
         </Routes>
+        <Footer/>
     </>
   
   )

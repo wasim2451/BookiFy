@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { useFirebase } from "../context/FirebaseContext";
 import { Link } from "react-router-dom";
-
+import Intro from "./Intro";
 function Home() {
   const [books, setBooks] = useState([]);
   const { retreiveData,uploadData , isLoggedIn} = useFirebase();
@@ -23,8 +23,10 @@ function Home() {
     fetch();
   }, [retreiveData]);
   return (
-  <Container className="my-4">
-    <h2 className="text-center mb-4 fw-bold">{books.length!=0?"Available Books":"No books available. List some books !"}</h2>
+  <Container className="my-4 mt-0">
+  {/* Intro */}
+    <Intro/>
+    <h2 className="text-center mb-4 fw-bold" id="books" >{books.length!=0?"Available Books":"No books available. List some books !"}</h2>
     <Row className="g-3 container-box">
       {books.map((book) => (
         <Col xs={12} sm={6} md={4} lg={3} key={book.id}>

@@ -155,11 +155,11 @@ function BookDetails() {
     return (
         <div className="container py-4">
         <div>
-             <div className="row g-4 align-items-start">
+             <div className="row g-4 align-items-start px-4">
                 {/* LEFT: Book Info */}
                 <div className="col-12 col-lg-6">
                     <div className=" bg-light h-100 book-info">
-                        <h3 className="fw-bold mb-3 text-success text-center">Book Information AI </h3>
+                        <h3 className="fw-bold mb-3 text-success text-center">Book Information AI ✨ </h3>
                         {bookDetails ? (
                             <p className="text-muted" style={{ whiteSpace: "pre-line" }}>
                                 {bookDetails}
@@ -220,7 +220,7 @@ function BookDetails() {
 
                         {/* Quantity & Buy Button */}
                         <div className="d-flex flex-column flex-sm-row gap-3">
-                            <label htmlFor="">Qty :</label>
+                            <label htmlFor="" className='fw-bold'>Qty :</label>
                             <input
                                 type="number"
                                 min="1"
@@ -239,17 +239,17 @@ function BookDetails() {
             </div>
         </div>
            
-            <div className="container my-4">
-                <div className="row justify-content-center">
+            <div className="container my-4 px-4">
+                <div className="row justify-content-start">
                     <div className="col-md-8">
                         <div
-                            className="p-4 rounded shadow-sm"
+                            className="p-4 rounded"
                             style={{
-                                background: "#f9f9f9",
+                                background: "hsla(62, 100%, 90%, 0.5)",
                                 border: "1px solid #e0e0e0",
                             }}
                         >
-                            <h4 className="text-primary fw-bold mb-3">Write a Review</h4>
+                            <h4 className="text-primary fw-bold mb-3">Write a Review 📝</h4>
 
                             <div className="d-flex">
                                 <input
@@ -260,7 +260,7 @@ function BookDetails() {
                                     onChange={(e) => setReview(e.target.value)}
                                 />
                                 <Button
-                                    variant="primary"
+                                    variant="secondary"
                                     onClick={handleReviewSubmit}
                                 >
                                     Submit
@@ -271,7 +271,7 @@ function BookDetails() {
                 </div>
             </div>
             {reviews.length!=0?<div className="review-section px-4">
-                <h3 className="fw-bold text-primary mb-3">Reviews</h3>
+                <h3 className="fw-bold text-dark mb-3">Reviews</h3>
                 {reviews.map((item, index) => (
                     <div
                         key={index}
@@ -288,7 +288,7 @@ function BookDetails() {
                     </div>
                 ))}
             </div>:<div className="review-section px-4">
-                <h3 className="fw-bold text-primary mb-3">Reviews</h3>
+                <h3 className="fw-bold text-dark mb-3">Reviews</h3>
                 <p>No reviews yet . Be the first one to write .</p>
             </div>}
         </div>
