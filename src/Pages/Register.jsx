@@ -30,7 +30,7 @@ const Register = () => {
 
   return (
     <Container className="mt-5">
-      <Row className="justify-content-md-center">
+      <Row className="justify-content-md-center signin-container">
         <Col md={6}>
           <h2 className="mb-4 text-center">Sign Up</h2>
           <Form onSubmit={handleSubmit}>

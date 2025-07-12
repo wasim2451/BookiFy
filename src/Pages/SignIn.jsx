@@ -48,8 +48,8 @@ const SignIn = () => {
     };
 
     return (
-       <Container className="py-5 px-4" style={{ minHeight: "100vh", background: "#f8f9fa" }}>
-      <Row className="justify-content-center">
+    <Container className="py-5 px-4" style={{ minHeight: "100vh", background: "#f8f9fa" }}>
+      <Row className="justify-content-center signin-container">
         <Col xs={12} sm={10} md={6} lg={5}>
           <Card className="shadow">
             <Card.Body className="p-4">

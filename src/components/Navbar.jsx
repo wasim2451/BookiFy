@@ -11,6 +11,12 @@ const CustomNavbar = () => {
   let name = user?.displayName || user?.email || "";
   let src = user?.photoURL || null;
   const navigate=useNavigate();
+  const handleSignin=()=>{
+    navigate('/signin')
+  }
+  const handleSignup=()=>{
+    navigate('/register')
+  }
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="py-2">
       <Container>
@@ -45,10 +51,12 @@ const CustomNavbar = () => {
             {!isLoggedIn ? (
                 <div className="d-flex flex-lg-row flex-column">
                     <Nav.Link href="/signin" className="text-white">
-                     <Button variant="outline-light" style={{width:"100px"}}>Sign In</Button>
+                     <Button variant="outline-light" style={{width:"100px"}}
+                     onClick={handleSignin}>Sign In</Button>
                     </Nav.Link>
                     <Nav.Link href="/register" className="text-white">
-                     <Button variant="outline-light" style={{width:"100px"}}>Sign up</Button>
+                     <Button variant="outline-light" style={{width:"100px"}}
+                     onClick={handleSignup}>Sign up</Button>
                     </Nav.Link>
                 </div>
             ) : (
