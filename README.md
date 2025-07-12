@@ -3,6 +3,8 @@
 **BookiFy** is a modern web platform that allows users to buy and sell second-hand books seamlessly. It connects readers looking for affordable books with sellers who wish to list their pre-loved books for others to enjoy.
 
 ---
+## Deployed Link 
+https://bookify-pink.vercel.app/
 
 ## ✨ Project Highlights
 
