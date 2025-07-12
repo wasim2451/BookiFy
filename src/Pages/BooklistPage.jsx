@@ -64,7 +64,7 @@ const BookListing = () => {
     };
 
     return (
-        <Container className="mt-5">
+        <Container className="mt-5 booklist-container">
             <Row className="justify-content-center">
                 <Col xs={12} md={8} lg={6}>
                     <Card

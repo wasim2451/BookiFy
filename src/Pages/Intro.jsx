@@ -2,16 +2,21 @@ import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useFirebase } from '../context/FirebaseContext';
+import Modal from '../components/Modal';
 function Intro() {
     const{isLoggedIn}=useFirebase();
   const navigate = useNavigate();
 
   const handleListYourBooks = () => {
+    if(isLoggedIn)
     navigate('/book-listing');
+    else
+    navigate('/signin');
   };
 
   return (
     <Container className="py-lg-2 py-4 pb-2">
+    <Modal/>
       <Row className="align-items-center">
         {/* Left Side */}
         <Col lg={6} className="mb-4 mb-lg-0">
@@ -30,14 +35,14 @@ function Intro() {
             >
               View Books
             </Button>
-            {isLoggedIn && <Button 
+            <Button 
               variant="danger" 
               size="md"
               onClick={handleListYourBooks}
               className='fw-bold'
             >
               List Your Books
-            </Button>}
+            </Button>
           </div>
         </Col>
 

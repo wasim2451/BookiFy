@@ -53,6 +53,9 @@
 .home{
     height: 100%;
 }
+.booklist-container{
+    height: 100vh;
+}
 .search{
     display: flex;
     justify-content: center;
