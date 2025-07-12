@@ -105,7 +105,7 @@ function BookDetails() {
                 order_id: orderID,
                 handler: async function (response) {
                     console.log(response);
-                    const res = await axios.post("https://lambent-florentine-b5d8b8.netlify.app/api/verify", {
+                    const res = await axios.post("https://bookify-1z0e.onrender.com/api/verify", {
                         razorpay_order_id: response.razorpay_order_id,
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_signature: response.razorpay_signature
