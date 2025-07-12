@@ -158,6 +158,38 @@ export const retreiveReviews = async (bookid) => {
     return objArray;
 }
 
+//retrieve Orders
+export const orders=async(userId)=>{
+     const q = query(
+        collection(db, "orders"),
+        where("buyerId", "==", userId)
+    );
+    const querySnapshot = await getDocs(q); // get documents with bookId
+    const objArray = [];
+    querySnapshot.forEach((doc) => {
+        objArray.push(doc.data());
+    });
+
+    console.log(objArray);
+    return objArray;
+}
+
+//retreive sales
+
+export const sales=async(userId)=>{
+     const q = query(
+        collection(db, "orders"),
+        where("sellerId", "==", userId)
+    );
+    const querySnapshot = await getDocs(q); // get documents with bookId
+    const objArray = [];
+    querySnapshot.forEach((doc) => {
+        objArray.push(doc.data());
+    });
+
+    console.log(objArray);
+    return objArray;
+}
 
 //configuring Supabase 
 const supabaseURL = 'https://urwjyfmoddgfydivkpxv.supabase.co';

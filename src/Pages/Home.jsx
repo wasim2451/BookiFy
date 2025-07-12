@@ -23,7 +23,7 @@ function Home() {
     fetch();
   }, [retreiveData]);
   return (
-  <Container className="my-4 mt-0">
+  <Container className="my-4 mt-0 home">
   {/* Intro */}
     <Intro/>
     <h2 className="text-center mb-4 fw-bold" id="books" >{books.length!=0?"Available Books":"No books available. List some books !"}</h2>

@@ -44,3 +44,12 @@
     display: grid;
     place-items: center;
 }
+.orders{
+    height: 100vh;
+}
+.sales{
+    height: 100vh;
+}
+.home{
+    height: 100%;
+}
