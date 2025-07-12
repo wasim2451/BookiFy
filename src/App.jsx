@@ -15,8 +15,9 @@ function App() {
         
   return (
     <>
-        <CustomNavbar/>
+        
         <Routes>
+        <CustomNavbar/>
         <Route path='/' element={<Home/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/signin' element={<SignIn/>} />
@@ -25,8 +26,9 @@ function App() {
         <Route path='/user/orders/:userID' element={<Orders/>} />
         <Route path='/user/sales/:userID' element={<Sales/>} />
         <Route path='/about' element={<About/>} />
-        </Routes>
         <Footer/>
+        </Routes>
+        
     </>
   
   )
