@@ -13,7 +13,7 @@ function Sales() {
       const salesFn = async () => {
         try {
           const res = await sales(user?.uid);
-          console.log(res);
+        //   console.log(res);
           setDataArr(res || []);
           
           const sum = (res || []).reduce((acc, item) => acc + (item.amount || 0), 0);

@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { FaReact } from "react-icons/fa";
 import { useFirebase } from "../context/FirebaseContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , NavLink} from "react-router-dom";
 
 const CustomNavbar = () => {
   const { user, isLoggedIn ,signout } = useFirebase();
@@ -34,13 +34,13 @@ const CustomNavbar = () => {
               Home
             </Nav.Link>
             {isLoggedIn ?<>
-                    <Nav.Link href="/book-listing" className="text-white nav-link">
+                    <Nav.Link as={NavLink} to={`/book-listing`} className="text-white">
                     List Your Book
                     </Nav.Link>
-                    <Nav.Link href={`/user/sales/${user.uid}`} className="text-white nav-link">
+                    <Nav.Link as={NavLink} to={`/user/sales/${user.uid}`} className="text-white">
                     Sales
                     </Nav.Link>
-                    <Nav.Link href={`/user/orders/${user.uid}`} className="text-white nav-link">
+                    <Nav.Link as={NavLink} to={`/user/orders/${user.uid}`} className="text-white">
                     Orders
                     </Nav.Link>
                     </> :<></>} 

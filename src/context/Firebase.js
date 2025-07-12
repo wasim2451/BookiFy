@@ -170,7 +170,7 @@ export const orders=async(userId)=>{
         objArray.push(doc.data());
     });
 
-    console.log(objArray);
+    // console.log(objArray);
     return objArray;
 }
 
@@ -187,7 +187,7 @@ export const sales=async(userId)=>{
         objArray.push(doc.data());
     });
 
-    console.log(objArray);
+    // console.log(objArray);
     return objArray;
 }
 
