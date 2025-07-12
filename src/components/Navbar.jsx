@@ -2,25 +2,23 @@ import React from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { FaReact } from "react-icons/fa";
 import { useFirebase } from "../context/FirebaseContext";
-import { useNavigate , NavLink} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CustomNavbar = () => {
-  const { user, isLoggedIn ,signout } = useFirebase();
-  console.log(user);
-  
-  let name = user?.displayName || user?.email || "";
-  let src = user?.photoURL || null;
-  const navigate=useNavigate();
-  const handleSignin=()=>{
-    navigate('/signin')
-  }
-  const handleSignup=()=>{
-    navigate('/register')
-  }
+  const { user, isLoggedIn, signout } = useFirebase();
+
+  const navigate = useNavigate();
+  const name = user?.displayName || user?.email || "";
+  const src = user?.photoURL || null;
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="py-2">
       <Container>
-        <Navbar.Brand href="/" className="d-flex align-items-center">
+        <Navbar.Brand
+          onClick={() => navigate("/")}
+          className="d-flex align-items-center"
+          style={{ cursor: "pointer" }}
+        >
           <FaReact size={28} className="me-2 text-info" />
           <span className="fw-bold fs-4">Bookify</span>
         </Navbar.Brand>
@@ -28,37 +26,63 @@ const CustomNavbar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
-          
-          <Nav className="me-auto flex-column flex-lg-row align-items-center align-items-lg-center  gap-lg-3">
-            <Nav.Link href="/" className="text-white" >
+          <Nav className="me-auto flex-column flex-lg-row align-items-center align-items-lg-center gap-lg-3">
+            <Nav.Link
+              onClick={() => navigate("/")}
+              className="text-white"
+              style={{ cursor: "pointer" }}
+            >
               Home
             </Nav.Link>
-            {isLoggedIn ?<>
-                    <Nav.Link as={NavLink} to={`/book-listing`} className="text-white">
-                    List Your Book
-                    </Nav.Link>
-                    <Nav.Link as={NavLink} to={`/user/sales/${user.uid}`} className="text-white">
-                    Sales
-                    </Nav.Link>
-                    <Nav.Link as={NavLink} to={`/user/orders/${user.uid}`} className="text-white">
-                    Orders
-                    </Nav.Link>
-                    </> :<></>} 
+
+            {isLoggedIn && (
+              <>
+                <Nav.Link
+                  onClick={() => navigate("/book-listing")}
+                  className="text-white"
+                  style={{ cursor: "pointer" }}
+                >
+                  List Your Book
+                </Nav.Link>
+
+                <Nav.Link
+                  onClick={() => navigate(`/user/sales/${user.uid}`)}
+                  className="text-white"
+                  style={{ cursor: "pointer" }}
+                >
+                  Sales
+                </Nav.Link>
+
+                <Nav.Link
+                  onClick={() => navigate(`/user/orders/${user.uid}`)}
+                  className="text-white"
+                  style={{ cursor: "pointer" }}
+                >
+                  Orders
+                </Nav.Link>
+              </>
+            )}
           </Nav>
 
-      
           <Nav className="ms-auto d-flex flex-column flex-lg-row align-items-center align-items-lg-center gap-2 gap-lg-3 mt-lg-0">
             {!isLoggedIn ? (
-                <div className="d-flex flex-lg-row flex-column">
-                    <Nav.Link href="/signin" className="text-white">
-                     <Button variant="outline-light" style={{width:"100px"}}
-                     onClick={handleSignin}>Sign In</Button>
-                    </Nav.Link>
-                    <Nav.Link href="/register" className="text-white">
-                     <Button variant="outline-light" style={{width:"100px"}}
-                     onClick={handleSignup}>Sign up</Button>
-                    </Nav.Link>
-                </div>
+              <div className="d-flex flex-lg-row flex-column">
+                <Button
+                  variant="outline-light"
+                  style={{ width: "100px" }}
+                  onClick={() => navigate("/signin")}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  variant="outline-light"
+                  style={{ width: "100px" }}
+                  onClick={() => navigate("/register")}
+                  className="ms-lg-3 mt-2 mt-lg-0"
+                >
+                  Sign Up
+                </Button>
+              </div>
             ) : (
               <>
                 {src && (
@@ -78,16 +102,15 @@ const CustomNavbar = () => {
                 <Button
                   variant="outline-light"
                   size="sm"
-                  style={{width:"100px"}}
+                  style={{ width: "100px" }}
                   className="mb-3 mb-lg-0"
-                  onClick={async() => {
-                    try{
-                         const res=await signout(isLoggedIn);
-                         console.log(res);
-                        navigate('/');
-                    }catch(e){
-
-                    } 
+                  onClick={async () => {
+                    try {
+                      await signout(isLoggedIn);
+                      navigate("/");
+                    } catch (e) {
+                      console.error(e);
+                    }
                   }}
                 >
                   Sign Out
